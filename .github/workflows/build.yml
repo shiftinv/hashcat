@@ -1,0 +1,31 @@
+on:
+  push:
+    paths:
+      - .github/**/*
+      - deps/**/*
+      - include/*
+      - OpenCL/**/*
+      - src/**/*
+      - Makefile
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt-get install --no-install-recommends -y mingw-w64 p7zip-full
+      - name: Configure iconv
+        run: |
+          cd ..
+          git clone https://github.com/win-iconv/win-iconv
+          cd win-iconv
+          patch < ../hashcat/tools/win-iconv-64.diff
+          sudo make install
+      - run: make win
+      - run: make linux
+      # use 7z instead of artifact zip since 7zip achieves a significantly better compression ratio (~8MB vs ~60MB)
+      - run: 7z a hashcat.7z ./charsets/ ./docs/ ./extra/ ./layouts/ ./masks/ ./modules/ ./OpenCL/ ./rules/ ./example* ./hashcat*
+      - uses: actions/upload-artifact@v2
+        with:
+          name: hashcat
+          path: hashcat.7z

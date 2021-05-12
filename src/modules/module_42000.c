@@ -36,8 +36,8 @@ static const u32   OPTI_TYPE      = 0;
 static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_LE
                                   | OPTS_TYPE_ST_HEX;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "test";
-static const char *ST_HASH        = "$aespbkdf$42*880328c5b8603ebf32bf1f4e7d4c3dcc*0d6d491f50dfbd21da473b1a2ca5eef2*53514c6974";
+static const char *ST_PASS        = "hashcat";
+static const char *ST_HASH        = "$aespbkdf$42*6abdfbf8a052190f4d1837a19e64b541*77313871ceabe746e9c06ed53abe1cfb*53514c6974";
 
 u32         module_attack_exec    (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC;     }
 u32         module_dgst_pos0      (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return DGST_POS0;       }

@@ -29,7 +29,7 @@ static const u32   DGST_POS1      = 1;
 static const u32   DGST_POS2      = 2;
 static const u32   DGST_POS3      = 3;
 static const u32   DGST_SIZE      = DGST_SIZE_4_4;
-static const u32   HASH_CATEGORY  = HASH_CATEGORY_ARCHIVE;
+static const u32   HASH_CATEGORY  = HASH_CATEGORY_RAW_CIPHER_KPA;
 static const char *HASH_NAME      = "Generic AES-128-ECB PBKDF2-HMAC-SHA1";
 static const u64   KERN_TYPE      = 42000;
 static const u32   OPTI_TYPE      = 0;
@@ -37,6 +37,7 @@ static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_LE
                                   | OPTS_TYPE_ST_HEX;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
 static const char *ST_PASS        = "hashcat";
+//                                    <sig> <rounds>           <salt>                       <ciphertext>        <plaintext header>
 static const char *ST_HASH        = "$aespbkdf$42*6abdfbf8a052190f4d1837a19e64b541*77313871ceabe746e9c06ed53abe1cfb*53514c6974";
 
 u32         module_attack_exec    (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC;     }
@@ -177,10 +178,10 @@ int module_hash_decode (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSE
   DEBUG_PRINTF("mask0: %08x, mask1: %08x, mask2: %08x, mask3: %08x\n", aes_target->header_mask[0], aes_target->header_mask[1], aes_target->header_mask[2], aes_target->header_mask[3]);
 
   // fake hash
-  digest[0] = aes_target->first_block[0];
-  digest[1] = aes_target->first_block[1];
-  digest[2] = aes_target->first_block[2];
-  digest[3] = aes_target->first_block[3];
+  digest[0] = aes_target->first_block[0] ^ salt->salt_buf[0];
+  digest[1] = aes_target->first_block[1] ^ salt->salt_buf[1];
+  digest[2] = aes_target->first_block[2] ^ salt->salt_buf[2];
+  digest[3] = aes_target->first_block[3] ^ salt->salt_buf[3];
 
   return (PARSER_OK);
 }

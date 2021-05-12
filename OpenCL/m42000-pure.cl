@@ -323,8 +323,6 @@ KERNEL_FQ void m42000_comp (KERN_ATTR_TMPS_ESALT(pbkdf2_sha1_tmp_t, aes_target_t
     hc_swap32_S (tmps[gid].out[3])
   };
 
-  // printf ("key:  %08x-%08x-%08x-%08x\n", pbkdf_out[0], pbkdf_out[1], pbkdf_out[2], pbkdf_out[3]);
-
 
   /**
    * AES128
@@ -336,20 +334,11 @@ KERNEL_FQ void m42000_comp (KERN_ATTR_TMPS_ESALT(pbkdf2_sha1_tmp_t, aes_target_t
   u32 decrypted[4];
   aes128_decrypt (ks, first_block, decrypted, s_td0, s_td1, s_td2, s_td3, s_td4);
 
-  // const u32 masked0 = decrypted[0] & header_mask[0];
-  // const u32 masked1 = decrypted[1] & header_mask[1];
-  // const u32 masked2 = decrypted[2] & header_mask[2];
-  // const u32 masked3 = decrypted[3] & header_mask[3];
-  // printf ("decr: %08x-%08x-%08x-%08x\n", decrypted[0], decrypted[1], decrypted[2], decrypted[3]);
-  // printf ("hmsk: %08x-%08x-%08x-%08x\n", header_mask[0], header_mask[1], header_mask[2], header_mask[3]);
-  // printf ("mskd: %08x-%08x-%08x-%08x\n", masked0, masked1, masked2, masked3);
-
   if (  ((decrypted[0] & header_mask[0]) == known_header[0])
      && ((decrypted[1] & header_mask[1]) == known_header[1])
      && ((decrypted[2] & header_mask[2]) == known_header[2])
      && ((decrypted[3] & header_mask[3]) == known_header[3])
   ) {
-      // printf ("found: %08x-%08x-%08x-%08x\n", plain0, plain1, plain2, plain3);
       if (atomic_inc (&hashes_shown[DIGESTS_OFFSET]) == 0)
       {
         mark_hash (plains_buf, d_return_buf, SALT_POS, digests_cnt, 0, DIGESTS_OFFSET, gid, 0, 0, 0);

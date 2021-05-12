@@ -317,10 +317,10 @@ KERNEL_FQ void m42000_comp (KERN_ATTR_TMPS_ESALT(pbkdf2_sha1_tmp_t, aes_target_t
 
   const u32 pbkdf_out[4] =
   {
-    hc_swap32_S (tmps[gid].out[0]),
-    hc_swap32_S (tmps[gid].out[1]),
-    hc_swap32_S (tmps[gid].out[2]),
-    hc_swap32_S (tmps[gid].out[3])
+    tmps[gid].out[0],
+    tmps[gid].out[1],
+    tmps[gid].out[2],
+    tmps[gid].out[3]
   };
 
 
@@ -329,7 +329,9 @@ KERNEL_FQ void m42000_comp (KERN_ATTR_TMPS_ESALT(pbkdf2_sha1_tmp_t, aes_target_t
    */
 
   u32 ks[44];
-  aes128_set_decrypt_key (ks, pbkdf_out, s_te0, s_te1, s_te2, s_te3, s_td0, s_td1, s_td2, s_td3);
+  // call key functions directly instead of using aes128_set_decrypt_key (avoids duplicate byteswap)
+  aes128_ExpandKey (ks, pbkdf_out, s_te0, s_te1, s_te2, s_te3);
+  aes128_InvertKey (ks, s_te1, s_td0, s_td1, s_td2, s_td3);
 
   u32 decrypted[4];
   aes128_decrypt (ks, first_block, decrypted, s_td0, s_td1, s_td2, s_td3, s_td4);

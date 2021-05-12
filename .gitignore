@@ -23,3 +23,8 @@ obj/*.o
 obj/*.a
 include/CL
 tools/luks_tests
+
+.vscode
+/*.txt
+/*.py
+/test*.sh
